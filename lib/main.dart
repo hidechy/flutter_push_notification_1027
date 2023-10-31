@@ -35,7 +35,7 @@ void main() async {
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     final payloadData = jsonEncode(message.data);
 
-    print('get foreground noti');
+    debugPrint('get foreground noti');
     if (message.notification != null) {
       PushNotifications.showSimpleNotification(
         title: message.notification!.title!,
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       routes: {
         '/': (context) => const HomePage(),
-        '/message': (context) => const Message(),
+        '/message': (context) => Message(),
       },
     );
   }
@@ -87,8 +87,9 @@ class HomePage extends StatelessWidget {
   }
 }
 
-//////////////////////////////////////////////
+//
 
+// ignore: avoid_classes_with_only_static_members
 class PushNotifications {
   static final _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -101,7 +102,7 @@ class PushNotifications {
     );
 
     final token = await _firebaseMessaging.getToken();
-    print('token: $token');
+    debugPrint('token: $token');
   }
 
   ///
@@ -153,14 +154,10 @@ class PushNotifications {
 
 //////////////////////////////////////////////
 
-class Message extends StatefulWidget {
-  const Message({super.key});
+// ignore: must_be_immutable
+class Message extends StatelessWidget {
+  Message({super.key});
 
-  @override
-  State<Message> createState() => _MessageState();
-}
-
-class _MessageState extends State<Message> {
   Map<dynamic, dynamic> payload = {};
 
   ///
