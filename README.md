@@ -1,16 +1,48 @@
-# test_push_noti_1027
+## php
 
-A new Flutter project.
+php /var/www/html/test_project/artisan PushNotiTest << token >>
 
-## Getting Started
+```php
+<?php
 
-This project is a starting point for a Flutter application.
+namespace App\Console\Commands;
 
-A few resources to get you started if this is your first Flutter project:
+use Illuminate\Console\Command;
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+class PushNotiTest extends Command
+{
+    protected $signature = 'PushNotiTest {registration_token}';
+
+    protected $description = 'Command description';
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * @return void
+     */
+    public function handle()
+    {
+        $registrationToken = $this->argument('registration_token');
+
+        $factory = (new Factory)->withServiceAccount('firebase.json');
+
+        $messaging = $factory->createMessaging();
+
+        $notification = Notification::fromArray([
+            'title' => 'Hello World Title!',
+            'body' => 'Hello World Body!',
+        ]);
+
+        $message = CloudMessage::withTarget('token', $registrationToken)->withNotification($notification);
+
+        $messaging->send($message);
+    }
+}
+```
